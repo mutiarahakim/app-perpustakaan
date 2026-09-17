@@ -1,36 +1,34 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <title>Tambah Kategori</title>
-    <style>
-        body { font-family: sans-serif; margin: 40px; max-width: 500px; }
-        label { display: block; margin-top: 12px; font-weight: bold; }
-        input, textarea { width: 100%; padding: 6px; margin-top: 4px; box-sizing: border-box; }
-        .error { color: #b91c1c; font-size: 14px; margin-top: 4px; }
-        .btn { margin-top: 20px; padding: 8px 16px; background: #2563eb; color: #fff; border: none; border-radius: 4px; cursor: pointer; }
-    </style>
-</head>
-<body>
-    <h1>Tambah Kategori</h1>
+{{-- File: resources/views/categories/create.blade.php --}}
+@extends('layouts.app')
+
+@section('title', 'Tambah Kategori Baru')
+
+@section('content')
     <p><a href="{{ route('categories.index') }}">&larr; Kembali ke daftar kategori</a></p>
+
+    <h1>Tambah Kategori Baru</h1>
 
     <form action="{{ route('categories.store') }}" method="POST">
         @csrf
 
-        <label for="nama_kategori">Nama Kategori</label>
-        <input type="text" name="nama_kategori" id="nama_kategori" value="{{ old('nama_kategori') }}">
-        @error('nama_kategori')
-            <div class="error">{{ $message }}</div>
-        @enderror
+        <div>
+            <label>Nama Kategori:</label><br>
+            <input type="text" name="nama_kategori" value="{{ old('nama_kategori') }}">
+            @error('nama_kategori')
+                <div style="color: red; font-size: 13px;">{{ $message }}</div>
+            @enderror
+        </div>
+        <br>
 
-        <label for="deskripsi">Deskripsi (opsional)</label>
-        <textarea name="deskripsi" id="deskripsi" rows="4">{{ old('deskripsi') }}</textarea>
-        @error('deskripsi')
-            <div class="error">{{ $message }}</div>
-        @enderror
+        <div>
+            <label>Deskripsi:</label><br>
+            <textarea name="deskripsi">{{ old('deskripsi') }}</textarea>
+            @error('deskripsi')
+                <div style="color: red; font-size: 13px;">{{ $message }}</div>
+            @enderror
+        </div>
+        <br>
 
-        <button type="submit" class="btn">Simpan</button>
+        <button type="submit" class="btn">Simpan Kategori</button>
     </form>
-</body>
-</html>
+@endsection

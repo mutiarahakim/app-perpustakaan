@@ -4,7 +4,7 @@
 @section('title', 'Tambah Buku Baru')
 
 @section('content')
-    <p><a href="{{ route('books.index') }}">&larr; Kembali ke daftar buku</a></p>
+    <p><a href=Z"{{ route('books.index') }}">&larr; Kembali ke daftar buku</a></p>
 
     <h1>Tambah Buku Baru</h1>
 
@@ -15,16 +15,16 @@
         <div>
             <label>Judul Buku:</label><br>
             <input type="text" name="judul" value="{{ old('judul') }}">
-            @error('judul')
+        
+        <div>
+            <label>Penulis:</label><br>
+            <input type="text" name="penulis" value="{{ old('penulis') }}">
+         @error('judul')
                 <div style="color: red; font-size: 13px;">{{ $message }}</div>
             @enderror
         </div>
         <br>
-
-        <div>
-            <label>Penulis:</label><br>
-            <input type="text" name="penulis" value="{{ old('penulis') }}">
-            @error('penulis')
+       @error('penulis')
                 <div style="color: red; font-size: 13px;">{{ $message }}</div>
             @enderror
         </div>

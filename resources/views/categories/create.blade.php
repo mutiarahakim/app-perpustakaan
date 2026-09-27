@@ -13,8 +13,8 @@
 
         <div>
             <label>Nama Kategori:</label><br>
-            <input type="text" name="nama_kategori" value="{{ old('nama_kategori') }}">
-            @error('nama_kategori')
+            <input type="text" name="nama" value="{{ old('nama') }}">
+            @error('nama')
                 <div style="color: red; font-size: 13px;">{{ $message }}</div>
             @enderror
         </div>

@@ -8,6 +8,12 @@
 
     <p><a href="{{ route('categories.create') }}" class="btn">+ Tambah Kategori</a></p>
 
+    @if (session('success'))
+        <div class="alert alert-success" style="color: green; margin-bottom: 15px;">
+            {{ session('success') }}
+        </div>
+    @endif
+
     <table>
         <thead>
             <tr>
@@ -20,16 +26,16 @@
         <tbody>
             @forelse ($categories as $category)
                 <tr>
-                    <td>{{ $category['id'] }}</td>
-                    <td>{{ $category['nama_kategori'] }}</td>
-                    <td>{{ $category['deskripsi'] ?? '-' }}</td>
+                    <td>{{ $category->id }}</td>
+                    <td>{{ $category->nama }}</td>
+                    <td>{{ $category->deskripsi ?? '-' }}</td>
                     <td>
-                        <a href="{{ route('categories.edit', $category['id']) }}">Edit</a>
+                        <a href="{{ route('categories.edit', $category->id) }}">Edit</a>
                         |
-                        <form class="inline" action="{{ route('categories.destroy', $category['id']) }}" method="POST">
+                        <form class="inline" action="{{ route('categories.destroy', $category->id) }}" method="POST" style="display:inline;">
                             @csrf
                             @method('DELETE')
-                            <button type="submit">Hapus</button>
+                            <button type="submit" onclick="return confirm('Yakin ingin menghapus kategori ini?')">Hapus</button>
                         </form>
                     </td>
                 </tr>
@@ -41,5 +47,8 @@
         </tbody>
     </table>
 
-    <p><em>Catatan: data di atas masih data dummy (array statis di Controller), belum dari database. Migration &amp; Model Eloquent baru dibuat di Pertemuan 5.</em></p>
+    {{-- Pagination links --}}
+    <div style="margin-top: 20px;">
+        {{ $categories->links() }}
+    </div>
 @endsection

@@ -30,7 +30,7 @@
                     <td>{{ $book->penerbit }}</td>
                     <td>{{ $book->tahun_terbit }}</td>
                     <td>{{ $book->stok }}</td>
-                    <td>{{ $book->category->nama ?? 'Tanpa Kategori' }}</td>
+                    <td>{{ $book->category->nama_kategori ?? 'Tanpa Kategori' }}</td>
                     <td>
                         <a href="{{ route('books.show', $book->id) }}">Detail</a>
                         |

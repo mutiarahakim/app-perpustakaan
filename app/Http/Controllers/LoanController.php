@@ -42,7 +42,7 @@ class LoanController extends Controller
         try {
             $loan = Loan::create([
                 'member_id' => $validated['member_id'],
-                'user_id' => Auth::id() ?? 1, // Default ke user ID 1 jika belum pakai autentikasi login penuh
+                'user_id' => Auth::id() ?? 1,
                 'tanggal_pinjam' => $validated['tanggal_pinjam'],
                 'tanggal_kembali' => $validated['tanggal_kembali'],
                 'status' => 'dipinjam',
@@ -94,7 +94,6 @@ class LoanController extends Controller
             'status' => 'required|in:dipinjam,dikembalikan,terlambat',
         ]);
 
-        // Jika status diubah menjadi dikembalikan dan tanggal dikembalikan diisi
         if ($validated['status'] == 'dikembalikan' && $loan->status != 'dikembalikan') {
             foreach ($loan->loanItems as $item) {
                 $item->book->increment('stok');
@@ -110,13 +109,46 @@ class LoanController extends Controller
             ->with('success', 'Status peminjaman berhasil diperbarui.');
     }
 
+    // --- TAMBAHAN METHOD KHUSUS UNTUK TUGAS KEMBALIKAN BUKU ---
+    public function kembalikan($id)
+    {
+        $loan = Loan::with('loanItems.book')->findOrFail($id);
+
+        if ($loan->status === 'dipinjam') {
+            DB::beginTransaction();
+            try {
+                // Kembalikan stok buku
+                foreach ($loan->loanItems as $item) {
+                    $item->book->increment('stok');
+                }
+
+                // Update status jadi dikembalikan dan isi tanggal hari ini
+                $loan->update([
+                    'status' => 'dikembalikan',
+                    'tanggal_dikembalikan' => now()->toDateString(),
+                ]);
+
+                DB::commit();
+
+                return redirect()->route('loans.index')
+                    ->with('success', 'Buku berhasil dikembalikan!');
+            } catch (\Exception $e) {
+                DB::rollBack();
+                return back()->withErrors(['error' => 'Gagal mengembalikan buku: ' . $e->getMessage()]);
+            }
+        }
+
+        return redirect()->route('loans.index')
+            ->with('error', 'Status peminjaman bukan dipinjam.');
+    }
+    // ---------------------------------------------------------
+
     public function destroy(string $id)
     {
         $loan = Loan::with('loanItems')->findOrFail($id);
 
         DB::beginTransaction();
         try {
-            // Jika status masih dipinjam saat dihapus, kembalikan stok bukunya
             if ($loan->status == 'dipinjam') {
                 foreach ($loan->loanItems as $item) {
                     $item->book->increment('stok');

@@ -34,4 +34,29 @@
         &copy; {{ date('Y') }} Sistem Perpustakaan Digital Kampus
     </footer>
 </body>
-</html>
+<style>
+    .badge-success {
+        background-color: #d1e7dd;
+        color: #0f5132;
+        padding: 4px 10px;
+        border-radius: 4px;
+        font-weight: 600;
+        font-size: 0.85rem;
+    }
+    .badge-warning {
+        background-color: #fff3cd;
+        color: #664d03;
+        padding: 4px 10px;
+        border-radius: 4px;
+        font-weight: 600;
+        font-size: 0.85rem;
+    }
+    .badge-danger {
+        background-color: #f8d7da;
+        color: #842029;
+        padding: 4px 10px;
+        border-radius: 4px;
+        font-weight: 600;
+        font-size: 0.85rem;
+    }
+</style>

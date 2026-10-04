@@ -32,11 +32,25 @@
                     <td>{{ $loan->tanggal_pinjam }}</td>
                     <td>{{ $loan->tanggal_kembali }}</td>
                     <td>
-                        <span style="text-transform: uppercase; font-weight: bold;">
-                            {{ $loan->status }}
-                        </span>
+                        {{-- Badge status berwarna sesuai instruksi tugas --}}
+                        @if ($loan->status === 'dikembalikan')
+                            <span class="badge-success">Dikembalikan</span>
+                        @elseif ($loan->status === 'dipinjam')
+                            <span class="badge-warning">Dipinjam</span>
+                        @else
+                            <span class="badge-danger">Terlambat</span>
+                        @endif
                     </td>
                     <td>
+                        {{-- Tombol Kembalikan khusus jika status dipinjam --}}
+                        @if ($loan->status === 'dipinjam')
+                            <form action="{{ route('loans.kembalikan', $loan->id) }}" method="POST" style="display:inline;">
+                                @csrf
+                                @method('PATCH')
+                                <button type="submit" onclick="return confirm('Kembalikan buku ini?')" style="margin-right: 4px;">Kembalikan</button>
+                            </form>
+                        @endif
+
                         <a href="{{ route('loans.show', $loan->id) }}">Detail</a>
                         |
                         <a href="{{ route('loans.edit', $loan->id) }}">Edit</a>

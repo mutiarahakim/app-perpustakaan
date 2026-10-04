@@ -54,7 +54,8 @@ class BookController extends Controller
 
     public function edit(string $id)
     {
-        $book = Book::findOrFail($id);
+        // Ditambahkan Eager Loading di sini agar relasi kategori ikut dimuat saat edit
+        $book = Book::with('category')->findOrFail($id);
         $categories = Category::all();
 
         return view('books.edit', compact('book', 'categories'));

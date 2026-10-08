@@ -18,6 +18,7 @@
             <tr>
                 <th>ID</th>
                 <th>Anggota</th>
+                <th>Petugas</th>
                 <th>Tanggal Pinjam</th>
                 <th>Tanggal Harus Kembali</th>
                 <th>Status</th>
@@ -29,6 +30,7 @@
                 <tr>
                     <td>{{ $loan->id }}</td>
                     <td>{{ $loan->member->nama ?? '-' }}</td>
+                    <td>{{ $loan->user->name ?? '-' }}</td>
                     <td>{{ $loan->tanggal_pinjam }}</td>
                     <td>{{ $loan->tanggal_kembali }}</td>
                     <td>
@@ -64,13 +66,13 @@
                 </tr>
             @empty
                 <tr>
-                    <td colspan="6">Belum ada data peminjaman buku.</td>
+                    <td colspan="7">Belum ada data peminjaman buku.</td>
                 </tr>
             @endforelse
         </tbody>
     </table>
 
-    {{-- Pagination links --}}
+    {{-- Pagination links yang sudah diperbaiki --}}
     <div style="margin-top: 20px;">
         {{ $loans->links() }}
     </div>

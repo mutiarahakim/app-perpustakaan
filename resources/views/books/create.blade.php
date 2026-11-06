@@ -1,71 +1,89 @@
-{{-- File: resources/views/books/create.blade.php --}}
+<!-- File: resources/views/books/create.blade.php -->
 @extends('layouts.app')
 
-@section('title', 'Tambah Buku Baru')
+@section('title', 'Tambah Buku')
 
 @section('content')
-    <p><a href=Z"{{ route('books.index') }}">&larr; Kembali ke daftar buku</a></p>
-
     <h1>Tambah Buku Baru</h1>
 
-    {{-- Pastikan form, input, dan error validasi yang sudah ada sebelumnya tetap di sini --}}
-    <form action="{{ route('books.store') }}" method="POST">
+    {{-- WAJIB ada enctype="multipart/form-data" karena ada upload file sampul --}}
+    <form action="{{ route('books.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
-        
-        <div>
-            <label>Judul Buku:</label><br>
-            <input type="text" name="judul" value="{{ old('judul') }}">
-        
-        <div>
-            <label>Penulis:</label><br>
-            <input type="text" name="penulis" value="{{ old('penulis') }}">
-         @error('judul')
-                <div style="color: red; font-size: 13px;">{{ $message }}</div>
-            @enderror
-        </div>
-        <br>
-       @error('penulis')
-                <div style="color: red; font-size: 13px;">{{ $message }}</div>
-            @enderror
-        </div>
-        <br>
 
         <div>
-            <label>Penerbit:</label><br>
-            <input type="text" name="penerbit" value="{{ old('penerbit') }}">
+            <label for="judul">Judul Buku:</label>
+            <input type="text" id="judul" name="judul" value="{{ old('judul') }}" required>
+            @error('judul')
+                <small style="color: red;">{{ $message }}</small>
+            @enderror
+        </div>
+
+        <div>
+            <label for="category_id">Kategori:</label>
+            <select id="category_id" name="category_id" required>
+                <option value="">-- Pilih Kategori --</option>
+                @foreach ($categories as $category)
+                    <option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>
+                        {{ $category->nama_kategori }}
+                    </option>
+                @endforeach
+            </select>
+            @error('category_id')
+                <small style="color: red;">{{ $message }}</small>
+            @enderror
+        </div>
+
+        <div>
+            <label for="penulis">Penulis:</label>
+            <input type="text" id="penulis" name="penulis" value="{{ old('penulis') }}" required>
+            @error('penulis')
+                <small style="color: red;">{{ $message }}</small>
+            @enderror
+        </div>
+
+        <div>
+            <label for="penerbit">Penerbit:</label>
+            <input type="text" id="penerbit" name="penerbit" value="{{ old('penerbit') }}" required>
             @error('penerbit')
-                <div style="color: red; font-size: 13px;">{{ $message }}</div>
+                <small style="color: red;">{{ $message }}</small>
             @enderror
         </div>
-        <br>
 
         <div>
-            <label>Tahun Terbit:</label><br>
-            <input type="number" name="tahun_terbit" value="{{ old('tahun_terbit') }}">
+            <label for="tahun_terbit">Tahun Terbit (4 digit):</label>
+            <input type="number" id="tahun_terbit" name="tahun_terbit" value="{{ old('tahun_terbit') }}" required>
             @error('tahun_terbit')
-                <div style="color: red; font-size: 13px;">{{ $message }}</div>
+                <small style="color: red;">{{ $message }}</small>
             @enderror
         </div>
-        <br>
 
         <div>
-            <label>Stok:</label><br>
-            <input type="number" name="stok" value="{{ old('stok') }}">
+            <label for="isbn">ISBN (Opsional):</label>
+            <input type="text" id="isbn" name="isbn" value="{{ old('isbn') }}">
+            @error('isbn')
+                <small style="color: red;">{{ $message }}</small>
+            @enderror
+        </div>
+
+        <div>
+            <label for="stok">Stok:</label>
+            <input type="number" id="stok" name="stok" value="{{ old('stok', 0) }}" min="0" required>
             @error('stok')
-                <div style="color: red; font-size: 13px;">{{ $message }}</div>
+                <small style="color: red;">{{ $message }}</small>
             @enderror
         </div>
-        <br>
 
         <div>
-            <label>Kategori:</label><br>
-            <input type="text" name="kategori" value="{{ old('kategori') }}">
-            @error('kategori')
-                <div style="color: red; font-size: 13px;">{{ $message }}</div>
+            <label for="sampul">Sampul Buku (Opsional):</label>
+            <input type="file" id="sampul" name="sampul" accept="image/png, image/jpeg, image/jpg">
+            @error('sampul')
+                <small style="color: red;">{{ $message }}</small>
             @enderror
         </div>
-        <br>
 
-        <button type="submit" class="btn">Simpan Buku</button>
+        <div style="margin-top: 15px;">
+            <button type="submit">Simpan Buku</button>
+            <a href="{{ route('books.index') }}">Batal</a>
+        </div>
     </form>
 @endsection

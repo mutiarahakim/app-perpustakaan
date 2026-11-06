@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 use App\Models\Loan;
 use App\Models\Member;
 use App\Models\Book;
@@ -15,6 +17,28 @@ class LoanController extends Controller
         $loans = Loan::with(['member', 'user'])->paginate(10);
 
         return view('loans.index', compact('loans'));
+    }
+
+    public function report(Request $request)
+    {
+        $body = ['data' => [], 'meta' => null];
+
+        try {
+            $response = Http::get(config('services.internal_api.base_url').'/api/loans', [
+                'page' => $request->query('page', 1),
+            ]);
+
+            if ($response->successful()) {
+                $body = $response->json();
+            }
+        } catch (ConnectionException $e) {
+            // Server internal API (port 8011) tidak bisa dihubungi - tabel laporan tampil kosong.
+        }
+
+        return view('loans.report', [
+            'loans' => $body['data'] ?? [],
+            'meta' => $body['meta'] ?? null,
+        ]);
     }
 
     public function create()
@@ -40,10 +64,12 @@ class LoanController extends Controller
             'user_id' => auth()->id(),
             'tanggal_pinjam' => $validated['tanggal_pinjam'],
             'tanggal_kembali' => $validated['tanggal_kembali'],
+            'status' => 'dipinjam',
         ]);
 
-        // Jika ada relasi buku (sync), tambahkan di sini jika diperlukan
-        // $loan->books()->sync($validated['book_ids']);
+        foreach ($validated['book_ids'] as $bookId) {
+            $loan->loanItems()->create(['book_id' => $bookId]);
+        }
 
         return redirect()->route('loans.index')->with('success', 'Data peminjaman berhasil ditambahkan.');
     }

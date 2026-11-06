@@ -27,7 +27,7 @@
             @forelse ($categories as $category)
                 <tr>
                     <td>{{ $category->id }}</td>
-                    <td>{{ $category->nama }}</td>
+                    <td>{{ $category->nama_kategori }}</td>
                     <td>{{ $category->deskripsi ?? '-' }}</td>
                     <td>
                         <a href="{{ route('categories.edit', $category->id) }}">Edit</a>

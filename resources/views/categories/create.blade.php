@@ -13,8 +13,9 @@
 
         <div>
             <label>Nama Kategori:</label><br>
-            <input type="text" name="nama" value="{{ old('nama') }}">
-            @error('nama')
+            {{-- Ubah name="nama" menjadi name="nama_kategori" --}}
+            <input type="text" name="nama_kategori" value="{{ old('nama_kategori') }}" required>
+            @error('nama_kategori')
                 <div style="color: red; font-size: 13px;">{{ $message }}</div>
             @enderror
         </div>
